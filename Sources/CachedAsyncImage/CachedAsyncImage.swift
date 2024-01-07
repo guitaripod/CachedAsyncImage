@@ -14,6 +14,8 @@ class DefaultImageCache: ImageCache {
     private var cache = NSCache<NSURL, UIImage>()
     
     /// Access images by subscripting with a URL.
+    ///
+    /// - Parameter url: The URL of the image to be fetched or stored.
     subscript(_ url: URL) -> UIImage? {
         get {
             cache.object(forKey: url as NSURL)
@@ -26,12 +28,30 @@ class DefaultImageCache: ImageCache {
     }
 }
 
+/// A SwiftUI view that loads and displays images from a URL, with caching.
+///
+/// Usage:
+///
+/// ```swift
+/// CachedAsyncImage(
+///     url: URL(string: "https://example.com/image.jpg"),
+///     placeholder: Image(systemName: "photo"),
+///     errorImage: Image(systemName: "multiply.circle")
+/// )
+/// ```
 struct CachedAsyncImage: View {
     @StateObject private var viewModel: ViewModel
     
     var placeholder: Image
     var errorImage: Image
     
+    /// Initializes a new instance of `CachedAsyncImage`.
+    ///
+    /// - Parameters:
+    ///   - url: The URL of the image to load.
+    ///   - placeholder: A view to display while the image is loading. Defaults to a system image.
+    ///   - errorImage: A view to display if the image loading fails. Defaults to a system image.
+    ///   - cache: An optional `ImageCache` instance for custom caching behavior. Defaults to `DefaultImageCache`.
     init(
         url: URL?,
         placeholder: Image = Image(systemName: "photo"),
