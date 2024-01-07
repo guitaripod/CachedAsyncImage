@@ -11,9 +11,9 @@ CachedAsyncImage is a Swift package offering an efficient and easy-to-use image 
 
 ## Requirements
 
-- iOS 13.0+ / macOS 10.15+
-- Swift 5.3+
-- Xcode 12.0+
+- iOS 14.0+ / macOS 10.15+
+- Swift 5.9+
+- Xcode 15.0+
 
 ## Installation
 
