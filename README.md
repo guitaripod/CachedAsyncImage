@@ -22,7 +22,7 @@ CachedAsyncImage is a Swift package offering an efficient and easy-to-use image 
 You can add CachedAsyncImage to an Xcode project by adding it as a package dependency.
 
 1. From the **File** menu, select **Swift Packages** > **Add Package Dependency...**
-2. Enter `https://github.com/[YourGitHubUsername]/CachedAsyncImage.git` into the package repository URL text field
+2. Enter `https://github.com/marcusziade/CachedAsyncImage.git` into the package repository URL text field
 
 ## Usage
 
