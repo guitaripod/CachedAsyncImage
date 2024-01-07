@@ -28,6 +28,19 @@ You can add CachedAsyncImage to an Xcode project by adding it as a package depen
 
 `CachedAsyncImage` is a Swift package designed for SwiftUI applications, providing an efficient mechanism for asynchronously loading and caching images from the web. 
 
+### Common use case
+
+```swift
+import SwiftUI
+import CachedAsyncImage
+
+struct ContentView: View {
+    var body: some View {
+        CachedAsyncImage(url: URL(string: "https://example.com/image.jpg"))
+    }
+}
+```
+
 ### Components
 
 #### `ImageCache` Protocol
