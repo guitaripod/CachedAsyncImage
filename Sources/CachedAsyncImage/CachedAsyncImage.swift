@@ -4,19 +4,21 @@ import SwiftUI
 import UIKit
 
 /// Protocol that defines the requirements for an image caching system.
-protocol ImageCache {
+public protocol ImageCache {
     /// Subscript to get or set images for a URL.
     subscript(_ url: URL) -> UIImage? { get set }
 }
 
 /// A default implementation of `ImageCache` using `NSCache` to store images.
-class DefaultImageCache: ImageCache {
+open class DefaultImageCache: ImageCache {
     private var cache = NSCache<NSURL, UIImage>()
+    
+    public init() {}
     
     /// Access images by subscripting with a URL.
     ///
     /// - Parameter url: The URL of the image to be fetched or stored.
-    subscript(_ url: URL) -> UIImage? {
+    public subscript(_ url: URL) -> UIImage? {
         get {
             cache.object(forKey: url as NSURL)
         }
@@ -39,11 +41,11 @@ class DefaultImageCache: ImageCache {
 ///     errorImage: Image(systemName: "multiply.circle")
 /// )
 /// ```
-struct CachedAsyncImage: View {
+public struct CachedAsyncImage: View {
     @StateObject private var viewModel: ViewModel
     
-    var placeholder: Image
-    var errorImage: Image
+    public var placeholder: Image
+    public var errorImage: Image
     
     /// Initializes a new instance of `CachedAsyncImage`.
     ///
@@ -52,7 +54,7 @@ struct CachedAsyncImage: View {
     ///   - placeholder: A view to display while the image is loading. Defaults to a system image.
     ///   - errorImage: A view to display if the image loading fails. Defaults to a system image.
     ///   - cache: An optional `ImageCache` instance for custom caching behavior. Defaults to `DefaultImageCache`.
-    init(
+    public init(
         url: URL?,
         placeholder: Image = Image(systemName: "photo"),
         errorImage: Image = Image(systemName: "multiply.circle"),
@@ -63,7 +65,7 @@ struct CachedAsyncImage: View {
         self.errorImage = errorImage
     }
     
-    var body: some View {
+    public var body: some View {
         content
             .onAppear(perform: viewModel.loadImage)
     }
@@ -85,22 +87,20 @@ struct CachedAsyncImage: View {
     }
 }
 
-/// Extension to encapsulate the view model of the `CachedAsyncImage`.
+// MARK: - ViewModel for CachedAsyncImage
+
 extension CachedAsyncImage {
     
     /// ViewModel managing the state of the image loading process.
     final class ViewModel: ObservableObject {
-        /// Published property for the current state of the image loading process.
         @Published var state: LoadState = .idle
         
-        /// Custom error type for image loading.
         enum ImageLoadingError: Error {
             case urlError
             case decodingError
             case networkError(Error)
         }
         
-        /// Enumeration of possible states for the image loading process.
         enum LoadState {
             case idle
             case loading
@@ -109,7 +109,7 @@ extension CachedAsyncImage {
             case noURL
         }
         
-        init(url: URL?, cache: ImageCache) {
+        public init(url: URL?, cache: ImageCache) {
             self.url = url
             self.cache = cache
             if url == nil {
@@ -160,6 +160,8 @@ extension CachedAsyncImage {
         private var cancellable: AnyCancellable?
     }
 }
+
+// MARK: - Equatable for LoadState
 
 extension CachedAsyncImage.ViewModel.LoadState: Equatable {
     
