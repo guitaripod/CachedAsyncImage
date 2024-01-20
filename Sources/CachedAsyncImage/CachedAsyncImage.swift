@@ -73,18 +73,38 @@ public struct CachedAsyncImage: View {
     @ViewBuilder
     private var content: some View {
         switch viewModel.state {
-        case .idle, .loading, .noURL:
-            placeholder
+        case .idle, .loading:
+            ProgressView()
         case .failed:
             errorImage
+                .resizable()
+                .padding()
+                .scaledToFit()
                 .onTapGesture {
                     viewModel.loadImage()
                 }
         case .loaded(let image):
             Image(uiImage: image)
                 .resizable()
+        case .noURL:
+            placeholder
+                .resizable()
+                .padding()
+                .scaledToFit()
         }
     }
+}
+
+#Preview {
+    let size: CGFloat = 200
+    let url = URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/c6/b1/6c/c6b16cd1-5580-a214-8745-c4f6faa490d6/16UMGIM59220.rgb.jpg/300x300bb.jpg")
+    
+    return CachedAsyncImage(url: url)
+        .frame(width: size, height: size)
+        .aspectRatio(contentMode: .fit)
+        .cornerRadius(8)
+        .background(Color.gray.opacity(0.3))
+        .cornerRadius(8, antialiased: true)
 }
 
 // MARK: - ViewModel for CachedAsyncImage
