@@ -7,13 +7,23 @@ import UIKit
 public protocol ImageCache {
     /// Subscript to get or set images for a URL.
     subscript(_ url: URL) -> UIImage? { get set }
+    
+    /// Function to adjust cache limits dynamically.
+    func setLimits(countLimit: Int, totalCostLimit: Int)
 }
 
 /// A default implementation of `ImageCache` using `NSCache` to store images.
 open class DefaultImageCache: ImageCache {
     private var cache = NSCache<NSURL, UIImage>()
     
-    public init() {}
+    public init(countLimit: Int = 0, totalCostLimit: Int = 0) {
+        setLimits(countLimit: countLimit, totalCostLimit: totalCostLimit)
+    }
+    
+    public func setLimits(countLimit: Int, totalCostLimit: Int) {
+        cache.countLimit = countLimit
+        cache.totalCostLimit = totalCostLimit
+    }
     
     /// Access images by subscripting with a URL.
     ///
@@ -23,9 +33,12 @@ open class DefaultImageCache: ImageCache {
             cache.object(forKey: url as NSURL)
         }
         set {
-            newValue == nil
-            ? cache.removeObject(forKey: url as NSURL)
-            : cache.setObject(newValue!, forKey: url as NSURL)
+            if let newValue {
+                let cost = newValue.size.height * newValue.size.width * newValue.scale
+                cache.setObject(newValue, forKey: url as NSURL, cost: Int(cost))
+            } else {
+                cache.removeObject(forKey: url as NSURL)
+            }
         }
     }
 }

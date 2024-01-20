@@ -102,6 +102,11 @@ final class CachedAsyncImage_Tests: XCTestCase {
 }
 
 final class MockImageCache: ImageCache {
+    
+    func setLimits(countLimit: Int, totalCostLimit: Int) {
+        
+    }
+    
     var stubbedImage: UIImage?
     var didSetImage = false
     var evictsImages = false
